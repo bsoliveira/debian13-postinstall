@@ -237,7 +237,7 @@ As alterações aplicadas buscam manter-se o mais próximo possível do padrão 
 git clone git@github.com:bsoliveira/debian13-postinstall.git
 cd debian13-postinstall
 chmod +x debian-postinstall.sh
-./debian-postinstall.sh
+sudo ./debian-postinstall.sh
 ```
 
 ## Testes recomendados após a execução
