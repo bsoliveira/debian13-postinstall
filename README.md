@@ -13,7 +13,6 @@ Script de pós-instalação para Debian 13, focado em desktops e laptops, com ob
 - Modernizar fontes APT para o formato Deb822
 - Ativar ZRAM para melhor uso de memória cache
 - Otimizar CPU frequency scaling - modo desempenho
-- Ajustar fstab para o uso de SSDs
 - Reduzir tamanho do initramfs
 - Otimizar o tempo de boot no GRUB
 - Limitar tamanho dos registros logs do journald
@@ -79,25 +78,6 @@ WantedBy=multi-user.target
 - saiba mais em https://wiki.debian.org/CpuFrequencyScaling
 - Outro otimo post em https://www.vivaolinux.com.br/dica/Regulando-velocidade-e-energia-gasta-pelos-processadores-Metodo-moderno-cpupower
 
-### FSTAB otimização de SSD / NVMe - `/etc/fstab`
-
-A remoção da opção de montagem com discard e a habilitação do fstrim.timer, 
-é prática comum em muitas distribuições Linux modernas, deve-se principalmente 
-a melhorias de desempenho e longevidade do SSD.
-
-Quando a opção de montagem discard está habilitada, é realizado o TRIM 
-contínuo (em tempo real). Isso significa que, cada vez que um bloco de 
-dados é excluído, um comando TRIM é imediatamente enviado ao SSD.
-
-O fstrim.timer utiliza uma abordagem de TRIM periódico, que é executado em 
-intervalos programados (geralmente uma vez por semana, por padrão no Debian).
-
-- Remove `discard` do fstab
-- Ativa `fstrim.timer` periódico semanalmente
-- `Cuidado!` esse script foi idealizado para uso SSD/NVMe com partições _ext4_
-- Saiba mais em https://wiki.debian.org/SSDOptimization
-- Outra ótima documentação em https://docs.voidlinux.org/config/ssd.html
-
 
 ### Sincronização de horário -`/etc/systemd/timesyncd.conf`
 
@@ -113,7 +93,6 @@ NTP=a.st1.ntp.br b.st1.ntp.br c.st1.ntp.br d.st1.ntp.br
 - Compatível com _NTP.br_ orgão competente do Brasil
 - Aplique somente se você deseja usar servidores nacionais
 - Saiba mais em https://ntp.br/guia/linux/d
-
 
 
 ### Initramfs - `/etc/initramfs-tools/initramfs.conf`
@@ -214,7 +193,6 @@ virtuais que não dependem de recursos de rede para concluir o processo de boot.
 - Debian 13 (Trixie)
 - Sistema desktop minimo
 - Acesso root (ou sudo)
-- Partições ext4 (para otimização de SSD)
 
 
 ## ⚠️ Avisos importantes
@@ -226,27 +204,25 @@ As alterações aplicadas buscam manter-se o mais próximo possível do padrão 
 - O script modifica arquivos críticos do sistema
 - Backups automáticos são criados em suas respectivas pastas antes de cada alteração `<arquivo>.bak`
 - A desativação do **wait-online** é indicada apenas para desktop
-- O arquivo de log `debian-postinstall.log` é gerado no final
+- O arquivo de log `otimizacao.log` é gerado no final
 
 ## ▶️ Como usar
 
 ```bash
 git clone git@github.com:bsoliveira/debian13-postinstall.git
 cd debian13-postinstall
-sudo chmod +x debian-postinstall.sh
-sudo ./debian-postinstall.sh
+sudo chmod +x otimizar.sh
+sudo ./otimizar.sh
 ```
 
 ## Testes recomendados após a execução
 
 ```bash
-mount | grep ext4
-lsblk --discard
 swapon --show
-systemctl status fstrim.timer
-systemctl status cpupower.service
 cpupower frequency-info
 timedatectl status
+sudo systemctl status cpupower.service
+sudo systemctl status NetworkManager-wait-online.service
 ```
 
 ## Resultados do `systemd-analyze`
@@ -265,54 +241,26 @@ graphical.target reached after 2.076s in userspace.
 
 ## 🔄 Informações úteis de como reverter
 
-Restaurar arquivos .bak criados em:
+Utilize o `reverter.sh` para reverter as otimizações
 
-- /etc/apt/sources.list-original.bak
+```bash
+sudo chmod +x reverter.sh
+sudo ./reverter.sh
+```
+
+Arquivos modificados:
+- /etc/apt/sources.list-original.bak **(backup original do sources.list)**
+- /etc/apt/sources.list.bak **(criado pelo modernize-sources)**
+- /etc/apt/sources.list.d/debian.sources **(criado pelo modernize-sources)**
 - /etc/initramfs-tools/initramfs.conf.bak
 - /etc/default/grub.bak
-- /etc/fstab.bak
 - /etc/systemd/journald.conf.bak
 - /etc/systemd/timesyncd.conf.bak
 
-
-Remover arquivos .conf criados em:
-
-- /etc/apt/sources.list.d/debian.sources
-- /etc/systemd/zram-generator.conf
-- /etc/sysctl.d/99-custom.conf 
+Arquivos criados:
+- /etc/systemd/zram-generator.conf 
 - /etc/systemd/system/cpupower.service
-
-
-Remover zram-generator
-- sudo swapoff -a
-- sudo apt purge systemd-zram-generator
-
-Remover cpupower
-- sudo systemctl stop cpupower.service
-- sudo systemctl disable cpupower.service
-- sudo apt purge linux-cpupower
-
-
-Ativar/Desativar serviços:
-
-- sudo systemctl disable fstrim.timer
-- sudo systemctl enable NetworkManager-wait-online.service 
-
-
-Reiniciar serviços:
-
-- sudo systemctl restart systemd-journald
-- sudo systemctl restart systemd-timesyncd
-
-
-Depois reexecutar:
-
-```bash
-sudo update-grub
-sudo update-initramfs -u
-sudo systemctl daemon-reload
-sudo apt autoremove
-```
+- /etc/sysctl.d/99-custom.conf 
 
 
 

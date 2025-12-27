@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# debian-postinstall.sh
+# otimizar.sh
 # Debian 13 Pós Instalação e Otimizações
 # Autor: Bruno (Tijolaum)
 # URL: https://github.com/bsoliveira
@@ -12,7 +12,7 @@ trap 'fatal_error $LINENO "$BASH_COMMAND"' ERR
 [ "$EUID" -ne 0 ] && { echo "Executar como root"; exit 1; }
 
 ### Arquivo de log
-LOG_FILE="debian-postinstall.log"
+LOG_FILE="otimizacao.log"
 
 ### Cores
 GREEN="\e[32m"
@@ -156,34 +156,10 @@ else
   apt install -y linux-cpupower
   cp configs/cpupower.service /etc/systemd/system/
   
-  systemctl daemon-reload
-  systemctl enable --now cpupower.service
+  systemctl start cpupower.service
+  systemctl enable cpupower.service
   
   log_status "CPU-POWER: configurado com sucesso" "APLICADO"
-fi
-
-### Remover discard do fstab, e ativar fstrim.timer periódico semanalmente
-if [ -f /etc/fstab.bak ]; then
-  log_status "FSTAB: configurado anteriormente" "IGNORADO"
-
-elif [ findmnt -l -t ext4 | grep -q ext4 ]; then
-  log_status "FSTAB: Nenhuma particão EXT4 encontrada" "ERRO"
-
-else
-  cp /etc/fstab /etc/fstab.bak
-
-  awk '
-  /^[^#]/ && $3=="ext4" {
-    gsub(/(^|,)discard(,|$)/,",",$4)
-    gsub(/,,+/,",",$4)
-    gsub(/^,|,$/,"",$4)
-  } {print}
-  ' /etc/fstab.bak > /etc/fstab
-
-  mount -a
-  systemctl enable --now fstrim.timer
-  
-  log_status "FSTAB: configurado com sucesso" "APLICADO"
 fi
 
 
@@ -230,16 +206,15 @@ fi
 
 
 ### Desabilitar NetworkManager-wait-online
-if [ -f "/etc/systemd/system/NetworkManager-wait-online.service"  ]; then
-  log_status "NetworkManager-wait-online: Não está existe" "IGNORADO"
-
-elif [ ! systemctl list-unit-files | grep -q NetworkManager-wait-online.service ]; then
-  log_status "NetworkManager-wait-online: Não está habilitado" "IGNORADO"
-
-else
-  systemctl disable NetworkManager-wait-online.service 
+if systemctl is-active --quiet NetworkManager-wait-online.service; then
+  systemctl stop NetworkManager-wait-online.service
+  systemctl disable NetworkManager-wait-online.service
+  systemctl mask NetworkManager-wait-online.service
   
   log_status "NetworkManager-wait-online: foi desabilitado com sucesso" "APLICADO" 
+
+else
+  log_status "NetworkManager-wait-online: não está habilitado" "IGNORADO"
 fi
 
 
