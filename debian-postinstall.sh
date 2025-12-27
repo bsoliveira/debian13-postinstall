@@ -147,7 +147,7 @@ fi
 
 ### Habilitar o Serviço systemd para forçar o governor "performance" 
 if [ ! -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors ]; then
-  log_status "CPU-POWER: gocaling_available_governors não existe" "ERRO"
+  log_status "CPU-POWER: scaling_available_governors não encontrado" "ERRO"
 
 elif [ -f /etc/systemd/system/cpupower.service ]; then
   log_status "CPU-POWER: configurado anteriormente" "IGNORADO"

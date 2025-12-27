@@ -31,7 +31,6 @@ de gerenciar os repositórios de software.
 
 - Habilita os repositórios `contrib` e `non-free`
 - Migra o APT para o formato **Deb822**
-- Considere editar o arquivo para mudar a nacionalidade dos servidores
 - Saiba mais em https://wiki.debian.org/SourcesList
 
 
@@ -147,14 +146,12 @@ GRUB_TIMEOUT=1
 GRUB_TIMEOUT_STYLE=hidden
 GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3"
 GRUB_TERMINAL=console
-GRUB_DISABLE_OS_PROBER=true
 ```
 
 - 1 segundo boot praticamente imediato e ainda permite _Esc_ ift se precisar
 - Logs ainda suficientes para debug básico
 - Mensagens na tela apenas se algo atrasar
 - A opção _console_ Mantém o boot simples
-- O _OS_Prober_ está desativado pois a instalacao é a única no disco.
 - Saiba mais em [Grub Simple-configuration](https://www.gnu.org/software/grub/manual/grub/grub.html#Simple-configuration)
 
 ### Journald - `/etc/systemd/journald.conf`
@@ -236,7 +233,7 @@ As alterações aplicadas buscam manter-se o mais próximo possível do padrão 
 ```bash
 git clone git@github.com:bsoliveira/debian13-postinstall.git
 cd debian13-postinstall
-chmod +x debian-postinstall.sh
+sudo chmod +x debian-postinstall.sh
 sudo ./debian-postinstall.sh
 ```
 
