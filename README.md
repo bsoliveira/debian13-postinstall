@@ -3,7 +3,9 @@
 Script de pós-instalação para Debian 13, focado em desktops e laptops, com objetivo de melhorar desempenho, tempo de boot, uso de SSD, consumo de energia e organização do sistema, mantendo segurança e reversibilidade.
 
 ⚠️ **Importante**  
-Este script é voltado para **desktop pessoal**.
+Este repositório é destinado a **desktops pessoais** e foi validado em uma **instalação limpa do Debian 13**. Seu propósito é servir como referência de estudo e exemplo prático de configurações recomendadas.
+
+As alterações aplicadas buscam manter-se o mais próximo possível do padrão da instalação, adotando apenas ajustes amplamente documentados e recomendados. Para melhores resultados, revise os arquivos em `configs` e personalize-os de acordo com seu hardware e cenário de uso.
 
 
 ## Imagem
@@ -96,11 +98,11 @@ dados é excluído, um comando TRIM é imediatamente enviado ao SSD.
 O fstrim.timer utiliza uma abordagem de TRIM periódico, que é executado em 
 intervalos programados (geralmente uma vez por semana, por padrão no Debian).
 
-- Remove `discard`
+- Remove `discard` do fstab
 - Ativa `fstrim.timer` periódico semanalmente
 - `Cuidado!` esse script foi idealizado para uso SSD/NVMe com partições _ext4_
 - Saiba mais em https://wiki.debian.org/SSDOptimization
-
+- Outra ótima documentação em https://docs.voidlinux.org/config/ssd.html
 
 
 ### Sincronização de horário -`/etc/systemd/timesyncd.conf`
@@ -196,7 +198,6 @@ vm.swappiness = 10
 vm.vfs_cache_pressure = 50
 vm.dirty_background_ratio = 5
 vm.dirty_ratio = 15
-vm.dirty_writeback_centisecs = 500
 fs.inotify.max_user_watches = 524288
 ```
 
@@ -204,7 +205,6 @@ fs.inotify.max_user_watches = 524288
 - Reduz micro travamentos
 - Melhora a responsividade
 - Saiba mais em https://wiki.archlinux.org/title/Sysctl
-
 
 
 ### Desativar o serviço `NetworkManager-wait-online.service`
