@@ -1,0 +1,45 @@
+# Serviço systemd para forçar o governor "performance" em todos os núcleos da CPU
+# Indicado para desktops e notebooks ligados à tomada, onde desempenho
+# é prioridade em relação à economia de energia.
+#
+# Baseado no método moderno usando cpupower:
+# https://wiki.debian.org/CpuFrequencyScaling
+# https://www.vivaolinux.com.br/dica/Regulando-velocidade-e-energia-gasta-pelos-processadores-Metodo-moderno-cpupower
+#
+# Observação:
+# - Este serviço NÃO altera limites de frequência mínima/máxima.
+# - Apenas define o governor como "performance".
+# - Para notebooks em bateria, considere usar "schedutil" ou "powersave".
+#
+# Para criar o configurar o serviço Manualmente:
+# $ sudo nano /etc/systemd/system/cpupower.service
+#
+# Iniciar Serviço
+# $ systemctl daemon-reload
+# $ systemctl enable --now cpupower.service
+# 
+# Para verificar use:
+# $ systemctl status cpupower.service
+# $ cpupower frequency-info
+
+[Unit]
+# Descrição exibida em systemctl status
+Description=Set all CPU cores to performance governor
+
+# Garante que o serviço só execute após o sistema estar totalmente funcional
+# Evita rodar cedo demais durante o boot
+After=multi-user.target
+
+[Service]
+# Serviço executado apenas uma vez
+# Não permanece em execução após aplicar a configuração
+Type=oneshot
+
+# Define o governor "performance" para TODOS os núcleos (-c all)
+# Isso força a CPU a priorizar desempenho máximo e resposta rápida
+ExecStart=/usr/bin/cpupower -c all frequency-set -g performance
+
+[Install]
+# Faz com que o serviço seja executado automaticamente em todo boot
+# no modo multiusuário (ambiente gráfico ou terminal)
+WantedBy=multi-user.target
