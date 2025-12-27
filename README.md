@@ -2,11 +2,6 @@
 
 Script de pós-instalação para Debian 13, focado em desktops e laptops, com objetivo de melhorar desempenho, tempo de boot, uso de SSD, consumo de energia e organização do sistema, mantendo segurança e reversibilidade.
 
-⚠️ **Importante**  
-Este repositório é destinado a **desktops pessoais** e foi validado em uma **instalação limpa do Debian 13**. Seu propósito é servir como referência de estudo e exemplo prático de configurações recomendadas.
-
-As alterações aplicadas buscam manter-se o mais próximo possível do padrão da instalação, adotando apenas ajustes amplamente documentados e recomendados. Para melhores resultados, revise os arquivos em `configs` e personalize-os de acordo com seu hardware e cenário de uso.
-
 
 ## Imagem
 
@@ -224,6 +219,18 @@ virtuais que não dependem de recursos de rede para concluir o processo de boot.
 - Acesso root (ou sudo)
 - Partições ext4 (para otimização de SSD)
 
+
+## ⚠️ Avisos importantes
+
+Este repositório é destinado a **desktops pessoais** e foi validado em uma **instalação limpa do Debian 13**. Seu propósito é servir como referência de estudo e exemplo prático de configurações recomendadas.
+
+As alterações aplicadas buscam manter-se o mais próximo possível do padrão da instalação, adotando apenas ajustes amplamente documentados e recomendados. Para melhores resultados, revise os arquivos em `configs` e personalize-os de acordo com seu hardware e cenário de uso.
+
+- O script modifica arquivos críticos do sistema
+- Backups automáticos são criados em suas respectivas pastas antes de cada alteração `<arquivo>.bak`
+- A desativação do **wait-online** é indicada apenas para desktop
+- O arquivo de log `debian-postinstall.log` é gerado no final
+
 ## ▶️ Como usar
 
 ```bash
@@ -237,6 +244,7 @@ chmod +x debian-postinstall.sh
 
 ```bash
 mount | grep ext4
+lsblk --discard
 swapon --show
 systemctl status fstrim.timer
 systemctl status cpupower.service
@@ -258,28 +266,58 @@ Startup finished in 983ms (kernel) + 2.077s (userspace) = 3.061s
 graphical.target reached after 2.076s in userspace.
 ```
 
-## ⚠️ Avisos importantes
-
-- O script modifica arquivos críticos do sistema
-- Backups automáticos são criados antes de cada alteração
-- A desativação do wait-online é indicada apenas para desktop
-- O arquivo de log `debian-postinstall.log` é gerado no final
-
-## 🔄 Como reverter
+## 🔄 Informações úteis de como reverter
 
 Restaurar arquivos .bak criados em:
 
-- /etc/apt/
-- /etc/fstab.bak
+- /etc/apt/sources.list-original.bak
+- /etc/initramfs-tools/initramfs.conf.bak
 - /etc/default/grub.bak
-- /etc/systemd/
+- /etc/fstab.bak
+- /etc/systemd/journald.conf.bak
+- /etc/systemd/timesyncd.conf.bak
+
+
+Remover arquivos .conf criados em:
+
+- /etc/apt/sources.list.d/debian.sources
+- /etc/systemd/zram-generator.conf
+- /etc/sysctl.d/99-custom.conf 
+- /etc/systemd/system/cpupower.service
+
+
+Remover zram-generator
+- sudo swapoff -a
+- sudo apt purge systemd-zram-generator
+
+Remover cpupower
+- sudo systemctl stop cpupower.service
+- sudo systemctl disable cpupower.service
+- sudo apt purge linux-cpupower
+
+
+Ativar/Desativar serviços:
+
+- sudo systemctl disable fstrim.timer
+- sudo systemctl enable NetworkManager-wait-online.service 
+
+
+Reiniciar serviços:
+
+- sudo systemctl restart systemd-journald
+- sudo systemctl restart systemd-timesyncd
+
 
 Depois reexecutar:
 
 ```bash
 sudo update-grub
 sudo update-initramfs -u
+sudo systemctl daemon-reload
+sudo apt autoremove
 ```
+
+
 
 ## 📣 Disclaimer
 
