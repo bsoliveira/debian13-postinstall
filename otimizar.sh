@@ -84,9 +84,15 @@ echo -e "-------------------------------------${RESET}"
 if [ -f /etc/apt/sources.list.bak ]; then
   log_status "Habilitar Repositórios Extras: configurado anteriormente" "IGNORADO"
 else
-  cp /etc/apt/sources.list /etc/apt/sources.list-original.bak
-  sed -i -E "s/^(deb.*) main(.*)$/\\1 main contrib non-free non-free-firmware\\2/" /etc/apt/sources.list
-  
+  cp /etc/apt/sources.list /etc/apt/sources.list.bak
+
+  sed -i -E '
+  /^deb(-src)? / {
+    / contrib /! s/\bmain\b/main contrib/
+    / non-free /! s/\bcontrib\b/contrib non-free/
+  }
+  ' /etc/apt/sources.list
+
   log_status "Habilitar Repositórios Extras" "APLICADO"
 fi
 
