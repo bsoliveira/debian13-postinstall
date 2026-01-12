@@ -21,7 +21,7 @@ de usar o disco rígido ou SSD como swap.
 
 ```text
 [zram0]
-zram-size = 4096 #4G
+zram-size = min(ram / 2, 4096) # 4096 = 4G
 compression-algorithm = zstd
 ```
 
@@ -85,7 +85,6 @@ limitados, reduzir o tempo de inicialização e o uso de RAM.
 ```text
 MODULES=dep
 COMPRESS=zstd
-COMPRESSLEVEL=19
 ```
 
 - Reduz tamanho do `initrd`
