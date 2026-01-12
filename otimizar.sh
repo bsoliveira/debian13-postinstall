@@ -96,22 +96,9 @@ else
   log_status "Habilitar Repositórios Extras" "APLICADO"
 fi
 
-
-### Migra o APT para o formato Deb822
-if [ -f /etc/apt/sources.list.d/debian.sources ]; then
-  log_status "Modernizar Deb822: configurado anteriormente" "IGNORADO"
-else
-  apt modernize-sources -y
- 
-  log_status "Modernizar Deb822: configurado com sucesso" "APLICADO"
-fi
-
-
 ### Atualizar Sistema
 apt update
 apt upgrade -y
-apt autoremove -y
-apt clean
 log_status "Atualizar sistema" "APLICADO"
 
 

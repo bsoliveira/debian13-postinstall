@@ -81,29 +81,15 @@ echo -e "-------------------------------------${RESET}"
 
 
 ### Revertendo sources.list
-if [ -f /etc/apt/sources.list-original.bak ]; then
-  mv /etc/apt/sources.list-original.bak /etc/apt/sources.list 
+if [ -f /etc/apt/sources.list.bak  ]; then
+  mv /etc/apt/sources.list.bak  /etc/apt/sources.list 
+  apt update
 
   log_status "Revertendo sources.list: revertido com sucesso" "APLICADO"
-
+  
 else
   log_status "Revertendo sources.list: nada a fazer" "IGNORADO"
 fi
-
-### Reverte Migração do APT formato Deb822
-if [ -f /etc/apt/sources.list.d/debian.sources ]; then
-  rm /etc/apt/sources.list.bak
-  rm /etc/apt/sources.list.d/debian.sources
-
-  log_status "Reverter Deb822: revertido com sucesso" "APLICADO"
-else
-  log_status "Reverter Deb822: nada a fazer" "IGNORADO"
-fi
-
-### Atualizar lista de pacotes
-apt update
-log_status "Atualizar lista de pacotes" "APLICADO"
-
 
 ### Remover systemd-zram-generator
 if [ -f /etc/systemd/zram-generator.conf ]; then

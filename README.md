@@ -10,7 +10,6 @@ Script de pós-instalação para Debian 13, focado em desktops e laptops, com ob
 ## 📌 Objetivos
 
 - Habilitar repositórios contrib e non-free
-- Modernizar fontes APT para o formato Deb822
 - Ativar ZRAM para melhor uso de memória cache
 - Otimizar CPU frequency scaling - modo desempenho
 - Reduzir tamanho do initramfs
@@ -25,11 +24,6 @@ Script de pós-instalação para Debian 13, focado em desktops e laptops, com ob
 Habilita os repositórios contrib e non-free para ter acesso a 
 mais pacotes de software.
 
-Habilita o novo formato deb822 é uma maneira mais moderna e organizada 
-de gerenciar os repositórios de software. 
-
-- Habilita os repositórios `contrib` e `non-free`
-- Migra o APT para o formato **Deb822**
 - Saiba mais em https://wiki.debian.org/SourcesList
 
 
