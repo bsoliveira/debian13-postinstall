@@ -67,17 +67,7 @@ fatal_error() {
   echo "==================================="
 } >> "$LOG_FILE"
 
-
-echo -e "${RED}"
-echo -e "██████  ███████ ██████  ██  █████  ███    ██      ██ ██████ "                 
-echo -e "██   ██ ██      ██   ██ ██ ██   ██ ████   ██     ███      ██"
-echo -e "██   ██ █████   ██████  ██ ███████ ██ ██  ██      ██  █████ "
-echo -e "██   ██ ██      ██   ██ ██ ██   ██ ██  ██ ██      ██      ██"
-echo -e "██████  ███████ ██████  ██ ██   ██ ██   ████      ██ ██████ "                       
-echo -e "${RESET}"
-echo -e "${YELLOW}"
-echo -e "Revertendo otimizações"
-echo -e "-------------------------------------${RESET}"
+echo -e "${YELLOW} Revertendo otimizações ${RESET}"
 
 
 ### Revertendo sources.list

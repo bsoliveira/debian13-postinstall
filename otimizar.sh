@@ -67,18 +67,7 @@ fatal_error() {
   echo "==================================="
 } >> "$LOG_FILE"
 
-
-echo -e "${GREEN}"
-echo -e "██████  ███████ ██████  ██  █████  ███    ██      ██ ██████ "                 
-echo -e "██   ██ ██      ██   ██ ██ ██   ██ ████   ██     ███      ██"
-echo -e "██   ██ █████   ██████  ██ ███████ ██ ██  ██      ██  █████ "
-echo -e "██   ██ ██      ██   ██ ██ ██   ██ ██  ██ ██      ██      ██"
-echo -e "██████  ███████ ██████  ██ ██   ██ ██   ████      ██ ██████ "                       
-echo -e "${RESET}"
-echo -e "${YELLOW}"
-echo -e "Iniciando otimizações pós-instalação"
-echo -e "-------------------------------------${RESET}"
-
+echo -e "${YELLOW} Iniciando otimizações ${RESET}"
 
 ### Repositórios Extras - Habilita os repositórios `contrib` e `non-free`
 if [ -f /etc/apt/sources.list.bak ]; then
