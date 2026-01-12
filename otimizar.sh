@@ -110,6 +110,7 @@ else
   cp configs/zram-generator.conf /etc/systemd/zram-generator.conf
   
   systemctl daemon-reload
+  systemctl start /dev/zram0
   
   log_status "ZRAM: configurado com sucesso" "APLICADO"
 fi

@@ -106,6 +106,7 @@ COMPRESSLEVEL=19
 - Configura o modo _dep_ que tenta carregar os módulos necessários conforme sua máquina
 - Ativa compressão com `zstd`
 - Saiba mais em https://wiki.debian.org/initramfs
+- GitHub: https://github.com/systemd/zram-generator
 
 
 ## GRUB - `/etc/default/grub`
@@ -146,7 +147,6 @@ MaxRetentionSec=1month
 - Facilita limpeza automática
 - Garante que logs antigos não sobrevivam indefinidamente
 - Saiba mais em https://wiki.archlinux.org/title/Systemd/Journal
-
 
 
 ### Ajustes de kernel (sysctl) - `/etc/sysctl.d/99-custom.conf` 
