@@ -31,6 +31,7 @@ compression-algorithm = zstd
 - Considere editar o arquivo e ajustar o _zram-size_ ao perfil do seu hardware
 - Considere trocar o algoritimo de compressão em processadores fracos
 - Saiba mais em https://wiki.debian.org/ZRam
+- Github https://github.com/systemd/zram-generator
 
 ### CPU Frequency Scaling - `/etc/systemd/system/cpupower.service`
 
@@ -165,17 +166,3 @@ virtuais que não dependem de recursos de rede para concluir o processo de boot.
 
 - Otimiza o tempo de boot para Desktop comum
 - `Cuidado!` serviços como VPN e outros de rede no boot podem quebrar
-
-## Resultados do `systemd-analyze` em maquina virtual
-
-Antes:
-```bash
-Startup finished in 1.991s (kernel) + 5.003s (userspace) = 6.995s
-graphical.target reached after 5.003s in userspace.
-```
-
-Depois:
-```bash
-Startup finished in 983ms (kernel) + 2.077s (userspace) = 3.061s
-graphical.target reached after 2.076s in userspace.
-```

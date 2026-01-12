@@ -47,7 +47,6 @@ As alterações aplicadas buscam manter-se o mais próximo possível do padrão 
 
 - O script modifica arquivos críticos do sistema
 - Arquivos `.bak` são criados em suas respectivas pastas antes de cada alteração
-- A desativação do **wait-online** é indicada apenas para desktop
 - O arquivo de log `otimizacao.log` é gerado no final
 
 ### Arquivos modificados:
